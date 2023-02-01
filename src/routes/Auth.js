@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth'
 import { clientAuth } from '../firebase'
 
 const Auth = () => {
@@ -23,7 +26,7 @@ const Auth = () => {
       if (newAccount) {
         data = await createUserWithEmailAndPassword(clientAuth, email, password)
       } else {
-        data = await signInWithEmailAndPassword(clientAuth,email, password)
+        data = await signInWithEmailAndPassword(clientAuth, email, password)
       }
       console.log(data)
     } catch (error) {
@@ -60,3 +63,6 @@ const Auth = () => {
 }
 
 export default Auth
+
+
+/* */
