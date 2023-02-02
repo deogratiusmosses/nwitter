@@ -2,13 +2,15 @@ import React, { useState } from 'react'
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup
 } from 'firebase/auth'
-import { clientAuth } from '../firebase'
+import { clientAuth, firebaseInstance } from '../firebase'
 
 const Auth = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [newAccount, setNewAccount] = useState(true)
+  const [error, setError] = useState('')
   const onChange = (event) => {
     const {
       target: { name, value },
@@ -30,8 +32,25 @@ const Auth = () => {
       }
       console.log(data)
     } catch (error) {
-      console.log(error)
+      setError(error.message)
     }
+  }
+
+  const toggleAccount = () => {
+    setNewAccount((prevValue) => !prevValue)
+  }
+  const onSocialClick = async (event) => {
+    const {
+      target: { name },
+    } = event
+    let provider
+    if (name === 'google') {
+      provider = new firebaseInstance.auth.GoogleAuthProvider()
+    } else if (name === 'github') {
+      provider = new firebaseInstance.auth.GithubAuthProvider()
+    }
+    const data =await signInWithPopup(clientAuth,provider)
+    console.log(data)
   }
   return (
     <div>
@@ -53,10 +72,18 @@ const Auth = () => {
         <input
           type="submit"
           value={newAccount ? 'Create Account' : 'Log In'}></input>
+        {error}
       </form>
+      <span onClick={toggleAccount}>
+        {newAccount ? 'sign in' : 'Create Account'}
+      </span>
       <div>
-        <button>Continue with Google</button>
-        <button>Continue with Github</button>
+        <button onClick={onSocialClick} name="google">
+          Continue with Google
+        </button>
+        <button onClick={onSocialClick} name="github">
+          Continue with Github
+        </button>
       </div>
     </div>
   )
@@ -64,5 +91,4 @@ const Auth = () => {
 
 export default Auth
 
-
-/* */
+/*                                                                                                                                                                                                                                                                                                                                                                    */

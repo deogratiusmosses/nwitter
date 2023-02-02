@@ -1,18 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { clientAuth } from '../firebase'
 import AppRouter from './Router'
-/* mport { authService } from 'firebase' */
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(clientAuth.currentUser)
+  const [init, setInit] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  useEffect(() => {
+    clientAuth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true)
+      } else {
+        setIsLoggedIn(false)
+      }
+      setInit(true)
+    })
+  }, [])
   return (
     <>
-      <AppRouter isLoggedIn={isLoggedIn} />
-      <footer >&copy; {new Date().getFullYear()}</footer>
+      {init ? <AppRouter isLoggedIn={isLoggedIn} /> : 'initializing'}
+      <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
     </>
   )
-  return <AppRouter />
 }
 
 export default App
-/* */

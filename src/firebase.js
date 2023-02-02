@@ -25,5 +25,6 @@ const initializeAppIfNecessary = () => {
 let app = initializeAppIfNecessary()
 
 export const clientAuth = getAuth(app)
+export const firebaseInstance=firebase
 
 /* export const Db = firebase.firestore() */
