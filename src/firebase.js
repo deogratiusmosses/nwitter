@@ -1,10 +1,9 @@
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
 
 import { getApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
-
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -25,6 +24,7 @@ const initializeAppIfNecessary = () => {
 let app = initializeAppIfNecessary()
 
 export const clientAuth = getAuth(app)
-export const firebaseInstance=firebase
+export const firebaseInstance = firebase
 
-/* export const Db = firebase.firestore() */
+export const dbService = firebase.firestore()
+
