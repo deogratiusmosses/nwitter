@@ -49,5 +49,4 @@ const Home = ({ userObj }) => {
 
 export default Home
 
-
-/* */
+/*  */
