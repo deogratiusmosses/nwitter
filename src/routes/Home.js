@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react'
+import Nweet from '../components/Nweet'
 import { dbService } from '../firebase'
 
 const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState('')
   const [nweets, setNweets] = useState([])
   useEffect(() => {
-    dbService.collection("nweets").onSnapshot((snapshot)=>{
-      console.log(snapshot.docs)
+    dbService.collection('nweets').onSnapshot((snapshot) => {
+      const nweetArray = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      setNweets(nweetArray)
     })
   }, [])
   const onSubmit = async (event) => {
@@ -14,7 +19,7 @@ const Home = ({ userObj }) => {
     await dbService.collection('nweets').add({
       text: nweet,
       createdAt: Date.now(),
-      creatoId: userObj.uid,
+      creatorId: userObj.uid,
     })
     setNweet('')
   }
@@ -38,9 +43,11 @@ const Home = ({ userObj }) => {
       </form>
       <div>
         {nweets.map((nweet) => (
-          <div key={nweet.id}>
-            <h4>{nweet.text}</h4>
-          </div>
+          <Nweet
+            key={nweet.id}
+            nweetObj={nweet}
+            isOwner={nweet.creatorId === userObj.uid}
+          />
         ))}
       </div>
     </div>
@@ -49,4 +56,10 @@ const Home = ({ userObj }) => {
 
 export default Home
 
-/*  */
+/*                                                               */
+
+/*     {nweets.map((nweet) => (
+          <div key={nweet.id}>
+            <h4>{nweet.text}</h4>
+          </div>
+        ))} */
