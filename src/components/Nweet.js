@@ -1,3 +1,4 @@
+import { async } from '@firebase/util'
 import React, { useState } from 'react'
 import { dbService } from '../firebase'
 
@@ -12,24 +13,37 @@ const Nweet = ({ nweetObj, isOwner }) => {
   }
 
   const toggleEditing = () => setEditing((prev) => !prev)
+  const onSubmit = async (event) => {
+    event.preventDefault()
+    await dbService.doc(`nweets/${nweetObj.id}`).update({
+      text: newNweet,
+    })
+    setEditing(false)
+  }
   const onChange = (event) => {
     const {
       target: { value },
     } = event
-
+    setNewNweet(value)
   }
   return (
     <div>
       {editing ? (
         <>
-          <form>
-            <input
-              type="text"
-              placeholder="Edit Nweet"
-              value={newNweet}
-              required
-            />
-          </form>
+          {isOwner && (
+            <>
+              <form onSubmit={onSubmit}>
+                <input
+                  onChange={onChange}
+                  type="text"
+                  placeholder="Edit Nweet"
+                  value={newNweet}
+                  required
+                />
+                <input type="submit" value="Update Nweet" />
+              </form>
+            </>
+          )}
           <button onClick={toggleEditing}>Cancel</button>
         </>
       ) : (
@@ -49,5 +63,4 @@ const Nweet = ({ nweetObj, isOwner }) => {
 
 export default Nweet
 
-
-/* */
+/*              */

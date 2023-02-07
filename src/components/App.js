@@ -22,7 +22,7 @@ function App() {
       {init ? (
         <AppRouter isLoggedIn={isLoggedIn} userObj={userObj} />
       ) : (
-        'initializing'
+        'Loading...'
       )}
       <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
     </>
@@ -30,3 +30,4 @@ function App() {
 }
 
 export default App
+/* */
