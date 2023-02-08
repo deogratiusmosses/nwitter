@@ -18,13 +18,23 @@ const Home = ({ userObj }) => {
   }, [])
   const onSubmit = async (event) => {
     event.preventDefault()
-    storageService.ref().child(`${userObj.uid}/${userObj.uid}/${uuidv4()}`)
-    /* await dbService.collection('nweets').add({
+    let attachmentUrl = ''
+    if (attachment !== '') {
+      const atachmentRef = storageService
+        .ref()
+        .child(`${userObj.uid}/${userObj.uid}/${uuidv4()}`)
+      const respose = await atachmentRef.putString(attachment, 'data_url')
+       attachmentUrl = await respose.ref.getDownloadURL()
+    }
+    const nweetElement = {
       text: nweet,
       createdAt: Date.now(),
       creatorId: userObj.uid,
-    })
-    setNweet('') */
+      attachmentUrl,
+    }
+    await dbService.collection('nweets').add(nweetElement)
+    setNweet('')
+    SetAttachment('')
   }
   const onChange = (event) => {
     const {
@@ -62,6 +72,7 @@ const Home = ({ userObj }) => {
         {attachment && (
           <div>
             <img
+              alt=""
               src={attachment}
               width="60px"
               height="60px"
@@ -86,5 +97,4 @@ const Home = ({ userObj }) => {
 
 export default Home
 
-
-/*  */
+/*                                                                                                                                                                                                                                                                                                                                                                                  */
