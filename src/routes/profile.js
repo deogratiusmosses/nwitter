@@ -1,29 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { clientAuth, dbService } from '../firebase'
 import { useHistory } from 'react-router-dom'
-import { clientAuth } from '../firebase'
 
-/* 
-//using redirect by hooks
-export default () => {
-    const history =useHistory()
-    const onLogOutClick = () => {
-        clientAuth.signOut()
-        history.push("/")
-    }
-    return (
-      <>
-        <button onClick={onLogOutClick}>Log Out</button>
-      </>
-    )
+export default ({ refreshUser, userObj }) => {
+  const history = useHistory()
+  const [newDisplayName, setNewDisplayName] = useState(userObj.displayName)
+  const onLogOutClick = () => {
+    clientAuth.signOut()
+    history.push('/')
   }
-   */
 
+  const onChange = (event) => {
+    const {
+      target: { value },
+    } = event
+    setNewDisplayName(value) 
+  }
+  const onSubmit = async (event) => {
+    event.preventDefault()
+    if (userObj.displayName !== newDisplayName) {
+      await userObj.updateProfile({
+        displayName: newDisplayName,
+      })
+      refreshUser()
+    }
+  }
 
-export default () => {
-  const onLogOutClick = () => clientAuth.signOut()
   return (
     <>
+      <form onSubmit={onSubmit}>
+        <input
+          onChange={onChange}
+          type="text"
+          autoFocus
+          placeholder="Display name"
+          value={newDisplayName}
+        />
+        <input type="submit" value="Update Profile" />
+      </form>
       <button onClick={onLogOutClick}>Log Out</button>
     </>
   )
 }
+//
